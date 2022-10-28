@@ -5,7 +5,7 @@ const routes = require('./router/users.js')
 
 let users = []
 
-const isValid = (username)=>{
+const doesExist = (username)=>{
   let userswithsamename = users.filter((user)=>{
     return user.username === username
   });
@@ -31,7 +31,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(session({secret:"fingerpint",resave: true, saveUninitialized: true}))
+app.use(session({secret:"fingerpint"}))
 
 app.use(express.json());
 
@@ -79,7 +79,7 @@ app.post("/register", (req,res) => {
   const password = req.body.password;
 
   if (username && password) {
-    if (!isValid(username)) { 
+    if (!doesExist(username)) { 
       users.push({"username":username,"password":password});
       return res.status(200).json({message: "User successfully registred. Now you can login"});
     } else {
