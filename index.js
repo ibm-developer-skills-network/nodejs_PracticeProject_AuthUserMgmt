@@ -29,13 +29,11 @@ const authenticatedUser = (username,password)=>{
 
 const app = express();
 
-app.use(express.json());
-
 app.use(session({secret:"fingerpint"}))
 
 app.use(express.json());
 
-app.use("/user", function auth(req,res,next){
+app.use("/friends", function auth(req,res,next){
    if(req.session.authorization) {
        token = req.session.authorization['accessToken'];
        jwt.verify(token, "access",(err,user)=>{
