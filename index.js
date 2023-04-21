@@ -29,7 +29,14 @@ const authenticatedUser = (username,password)=>{
 
 const app = express();
 
-app.use(session({secret:"fingerpint"},resave=true,saveUninitialized=true));
+// This code sets up session management using the Express session middleware
+app.use(
+  session({
+    secret: "fingerpint",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 app.use(express.json());
 
@@ -38,16 +45,16 @@ app.use("/friends", function auth(req,res,next){
        token = req.session.authorization['accessToken'];
        jwt.verify(token, "access",(err,user)=>{
            if(!err){
-               req.user = user;
-               next();
+        req.user = user;
+        next();
            }
            else{
                return res.status(403).json({message: "User not authenticated"})
-           }
-        });
-    } else {
+      }
+    });
+  } else {
         return res.status(403).json({message: "User not logged in"})
-    }
+  }
 });
 
 app.post("/login", (req,res) => {
@@ -66,7 +73,7 @@ app.post("/login", (req,res) => {
     req.session.authorization = {
       accessToken,username
   }
-  return res.status(200).send("User successfully logged in");
+    return res.status(200).send("User successfully logged in");
   } else {
     return res.status(208).json({message: "Invalid Login. Check username and password"});
   }
@@ -77,13 +84,13 @@ app.post("/register", (req,res) => {
   const password = req.body.password;
 
   if (username && password) {
-    if (!doesExist(username)) { 
+    if (!doesExist(username)) {
       users.push({"username":username,"password":password});
       return res.status(200).json({message: "User successfully registred. Now you can login"});
     } else {
       return res.status(404).json({message: "User already exists!"});    
     }
-  } 
+  }
   return res.status(404).json({message: "Unable to register user."});
 });
 
