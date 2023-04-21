@@ -1,9 +1,7 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const session = require('express-session')
 const routes = require("./routes");
-
-let users = []
+const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 
@@ -18,22 +16,7 @@ app.use(
 
 app.use(express.json());
 
-app.use("/friends", function auth(req,res,next){
-   if(req.session.authorization) {
-       token = req.session.authorization['accessToken'];
-       jwt.verify(token, "access",(err,user)=>{
-           if(!err){
-        req.user = user;
-        next();
-           }
-           else{
-               return res.status(403).json({message: "User not authenticated"})
-      }
-    });
-  } else {
-        return res.status(403).json({message: "User not logged in"})
-  }
-});
+app.use("/friends", authMiddleware);
 
 const PORT =5000;
 
