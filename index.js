@@ -5,27 +5,8 @@ const routes = require('./router/friends.js')
 
 let users = []
 
-const doesExist = (username)=>{
-  let userswithsamename = users.filter((user)=>{
-    return user.username === username
-  });
-  if(userswithsamename.length > 0){
-    return true;
-  } else {
-    return false;
-  }
-}
-
-const authenticatedUser = (username,password)=>{
-  let validusers = users.filter((user)=>{
-    return (user.username === username && user.password === password)
-  });
-  if(validusers.length > 0){
-    return true;
-  } else {
-    return false;
-  }
-}
+// Importing the authentication functions from the auth.js file
+const { doesExist, authenticatedUser } = require("./helpers/auth");
 
 const app = express();
 
