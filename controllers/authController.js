@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken"); // Importing the jsonwebtoken module
 const { doesExist, authenticatedUser } = require("../helpers/auth");
 
-let users = []; // Defining the users array
+const user = require("../models/user");
+const users = user.getAllUsers();
 
 let login = (req, res) => {
   const username = req.body.username;

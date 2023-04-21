@@ -1,3 +1,6 @@
+const user = require("../models/user");
+const users = user.getAllUsers();
+
 const doesExist = (username) => {
   let userswithsamename = users.filter((user) => {
     return user.username === username;
