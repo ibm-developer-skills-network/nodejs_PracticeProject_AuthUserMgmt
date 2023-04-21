@@ -18,33 +18,61 @@ let friends = {
 
 // GET request: Retrieve all friends
 let getAllFriends = (req, res) => {
-  // Update the code here
-
-  res.send("Yet to be implemented"); //This line is to be replaced with actual return value
+  res.send(JSON.stringify(friends, null, 4));
 };
 
 // GET by specific ID request: Retrieve a single friend with email ID
 let getFriendByEmail = (req, res) => {
-  // Update the code here
-  res.send("Yet to be implemented"); //This line is to be replaced with actual return value
+  const email = req.params.email;
+  const friend = friends[email];
+  if (friend) {
+    res.json(JSON.stringify(friend, null, 4));
+  } else {
+    res.status(404).send("Friend not found");
+  }
 };
 
 // POST request: Add a new friend
 let addFriend = (req, res) => {
-  // Update the code here
-  res.send("Yet to be implemented"); //This line is to be replaced with actual return value
+  const email = req.body.email;
+  const friend = req.body.friend;
+  if (email && friend) {
+    if (friends[email]) {
+      res.status(409).send("Friend with this email already exists");
+    } else {
+      friends[email] = friend;
+      res.status(201).send("Friend added successfully");
+    }
+  } else {
+    res.status(400).send("Bad request");
+  }
 };
 
 // PUT request: Update the details of a friend with email id
 let updateFriend = (req, res) => {
-  // Update the code here
-  res.send("Yet to be implemented"); //This line is to be replaced with actual return value
+  const email = req.params.email;
+  const friend = req.body.friend;
+  if (email && friend) {
+    if (friends[email]) {
+      friends[email] = friend;
+      res.send("Friend updated successfully");
+    } else {
+      res.status(404).send("Friend not found");
+    }
+  } else {
+    res.status(400).send("Bad request");
+  }
 };
 
 // DELETE request: Delete a friend by email id
 let deleteFriend = (req, res) => {
-  // Update the code here
-  res.send("Yet to be implemented"); //This line is to be replaced with actual return value
+  const email = req.params.email;
+  if (friends[email]) {
+    delete friends[email];
+    res.send("Friend deleted successfully");
+  } else {
+    res.status(404).send("Friend not found");
+  }
 };
 
 module.exports = {
