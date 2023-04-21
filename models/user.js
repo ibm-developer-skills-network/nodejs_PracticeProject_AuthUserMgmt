@@ -1,4 +1,9 @@
-let users = [];
+let users = [
+  {
+    username: "user2",
+    password: "password2",
+  },
+];
 
 module.exports = {
   // CREATE
