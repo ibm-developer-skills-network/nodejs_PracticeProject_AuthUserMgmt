@@ -1,7 +1,7 @@
+const user = require("../models/user");
+
 const doesExist = (username) => {
-  let userswithsamename = users.filter((user) => {
-    return user.username === username;
-  });
+  let userswithsamename = user.getUser(username);
   if (userswithsamename.length > 0) {
     return true;
   } else {
@@ -10,6 +10,7 @@ const doesExist = (username) => {
 };
 
 const authenticatedUser = (username, password) => {
+  const users = user.getAllUsers();
   let validusers = users.filter((user) => {
     return user.username === username && user.password === password;
   });
