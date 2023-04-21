@@ -8,11 +8,9 @@ module.exports = {
   },
 
   getUser: function (username) {
-    return users.find((user) => user.username === username);
-  },
-
-  doesExist: function (username) {
-    return users.some((user) => user.username === username);
+    return users.filter((user) => {
+      return user.username === username;
+    });
   },
 
   getAllUsers: function () {

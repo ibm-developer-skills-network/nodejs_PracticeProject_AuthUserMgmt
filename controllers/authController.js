@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken"); // Importing the jsonwebtoken module
 const { doesExist, authenticatedUser } = require("../helpers/auth");
 
 const user = require("../models/user");
-const users = user.getAllUsers();
 
 let login = (req, res) => {
   const username = req.body.username;
@@ -42,7 +41,7 @@ let register = (req, res) => {
 
   if (username && password) {
     if (!doesExist(username)) {
-      users.push({ username: username, password: password });
+      user.addUser(username,password);
       return res
         .status(201) // Using status code 201 for created
         .json({ message: "User successfully registered. You can now log in." });
