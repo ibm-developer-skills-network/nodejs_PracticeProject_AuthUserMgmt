@@ -36,15 +36,15 @@ let getFriendByEmail = (req, res) => {
 let addFriend = (req, res) => {
   const email = req.body.email;
   const friend = req.body.friend;
-  if (email && friend) {
-    if (friends[email]) {
-      res.status(409).send("Friend with this email already exists");
-    } else {
-      friends[email] = friend;
-      res.status(201).send("Friend added successfully");
-    }
+  if (!email || !friend) {
+    res.status(400).send("Please provide both email and friend in request body");
+  } else if (!isValidFriend(friend)) {
+    res.status(400).send("Invalid friend object. Please provide a valid friend object with firstName, lastName, and DOB");
+  } else if (friends[email]) {
+    res.status(409).send("Friend with this email already exists");
   } else {
-    res.status(400).send("Bad request");
+    friends[email] = friend;
+    res.status(201).send("Friend added successfully");
   }
 };
 
@@ -52,15 +52,15 @@ let addFriend = (req, res) => {
 let updateFriend = (req, res) => {
   const email = req.params.email;
   const friend = req.body.friend;
-  if (email && friend) {
-    if (friends[email]) {
-      friends[email] = friend;
-      res.send("Friend updated successfully");
-    } else {
-      res.status(404).send("Friend not found");
-    }
+  if (!email || !friend) {
+    res.status(400).send("Please provide both email and friend in request body");
+  } else if (!isValidFriend(friend)) {
+    res.status(400).send("Invalid friend object. Please provide a valid friend object with firstName, lastName, and DOB");
+  } else if (!friends[email]) {
+    res.status(404).send("Friend not found");
   } else {
-    res.status(400).send("Bad request");
+    friends[email] = friend;
+    res.send("Friend updated successfully");
   }
 };
 
@@ -74,6 +74,14 @@ let deleteFriend = (req, res) => {
     res.status(404).send("Friend not found");
   }
 };
+
+// Helper function to validate friend object
+function isValidFriend(friend) {
+  if (!friend.firstName || !friend.lastName || !friend.DOB) {
+    return false;
+  }
+  return true;
+}
 
 module.exports = {
   getAllFriends,
