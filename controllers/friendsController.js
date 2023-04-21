@@ -1,32 +1,16 @@
-let friends = {
-  "johnsmith@gamil.com": {
-    firstName: "John",
-    lastName: "Doe",
-    DOB: "22-12-1990",
-  },
-  "annasmith@gamil.com": {
-    firstName: "Anna",
-    lastName: "smith",
-    DOB: "02-07-1983",
-  },
-  "peterjones@gamil.com": {
-    firstName: "Peter",
-    lastName: "Jones",
-    DOB: "21-03-1989",
-  },
-};
+const friends = require("../models/friend");
 
 // GET request: Retrieve all friends
 let getAllFriends = (req, res) => {
-  res.status(200).send(JSON.stringify(friends, null, 4));
+  res.status(200).send(friends.getAllFriends());
 };
 
 // GET by specific ID request: Retrieve a single friend with email ID
 let getFriendByEmail = (req, res) => {
   const email = req.params.email;
-  const friend = friends[email];
+  const friend = friends.getFriend(email);
   if (friend) {
-    res.status(200).json(JSON.stringify(friend, null, 4));
+    res.status(200).json(friend);
   } else {
     res.status(404).send("Friend not found");
   }
@@ -37,14 +21,22 @@ let addFriend = (req, res) => {
   const email = req.body.email;
   const friend = req.body.friend;
   if (!email || !friend) {
-    res.status(400).send("Please provide both email and friend in request body");
+    res
+      .status(400)
+      .send("Please provide both email and friend in request body");
   } else if (!isValidFriend(friend)) {
-    res.status(400).send("Invalid friend object. Please provide a valid friend object with firstName, lastName, and DOB");
-  } else if (friends[email]) {
+    res
+      .status(400)
+      .send(
+        "Invalid friend object. Please provide a valid friend object with firstName, lastName, and DOB"
+      );
+  } else if (friends.getFriend(email)) {
     res.status(409).send("Friend with this email already exists");
   } else {
-    friends[email] = friend;
-    res.status(201).send("The user" + (' ')+ (req.body.firstName) + " Has been added!");
+    friends.addFriend(email, friend);
+    res
+      .status(201)
+      .send("The user" + " " + req.body.firstName + " Has been added!");
   }
 };
 
@@ -53,13 +45,19 @@ let updateFriend = (req, res) => {
   const email = req.params.email;
   const friend = req.body.friend;
   if (!email || !friend) {
-    res.status(400).send("Please provide both email and friend in request body");
+    res
+      .status(400)
+      .send("Please provide both email and friend in request body");
   } else if (!isValidFriend(friend)) {
-    res.status(400).send("Invalid friend object. Please provide a valid friend object with firstName, lastName, and DOB");
-  } else if (!friends[email]) {
+    res
+      .status(400)
+      .send(
+        "Invalid friend object. Please provide a valid friend object with firstName, lastName, and DOB"
+      );
+  } else if (!friends.getFriend(email)) {
     res.status(404).send("Friend not found");
   } else {
-    friends[email] = friend;
+    friends.updateFriend(email, friend);
     res.status(200).send(`Friend with the email  ${email} updated.`);
   }
 };
@@ -67,8 +65,8 @@ let updateFriend = (req, res) => {
 // DELETE request: Delete a friend by email id
 let deleteFriend = (req, res) => {
   const email = req.params.email;
-  if (friends[email]) {
-    delete friends[email];
+  if (friends.getFriend(email)) {
+    friends.deleteFriend(email);
     res.status(200).send(`Friend with the email  ${email} deleted.`);
   } else {
     res.status(404).send("Friend not found");
