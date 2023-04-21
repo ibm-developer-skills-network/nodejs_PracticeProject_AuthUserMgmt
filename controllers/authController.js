@@ -1,7 +1,6 @@
-const express = require("express");
-const router = express.Router();
 const jwt = require("jsonwebtoken"); // Importing the jsonwebtoken module
 const { doesExist, authenticatedUser } = require("../helpers/auth");
+
 let users = []; // Defining the users array
 
 let login = (req, res) => {
