@@ -18,7 +18,7 @@ let friends = {
 
 // GET request: Retrieve all friends
 let getAllFriends = (req, res) => {
-  res.send(JSON.stringify(friends, null, 4));
+  res.status(200).send(JSON.stringify(friends, null, 4));
 };
 
 // GET by specific ID request: Retrieve a single friend with email ID
@@ -26,7 +26,7 @@ let getFriendByEmail = (req, res) => {
   const email = req.params.email;
   const friend = friends[email];
   if (friend) {
-    res.json(JSON.stringify(friend, null, 4));
+    res.status(200).json(JSON.stringify(friend, null, 4));
   } else {
     res.status(404).send("Friend not found");
   }
@@ -44,7 +44,7 @@ let addFriend = (req, res) => {
     res.status(409).send("Friend with this email already exists");
   } else {
     friends[email] = friend;
-    res.status(201).send("Friend added successfully");
+    res.status(201).send("The user" + (' ')+ (req.body.firstName) + " Has been added!");
   }
 };
 
@@ -60,7 +60,7 @@ let updateFriend = (req, res) => {
     res.status(404).send("Friend not found");
   } else {
     friends[email] = friend;
-    res.send("Friend updated successfully");
+    res.status(200).send(`Friend with the email  ${email} updated.`);
   }
 };
 
@@ -69,7 +69,7 @@ let deleteFriend = (req, res) => {
   const email = req.params.email;
   if (friends[email]) {
     delete friends[email];
-    res.send("Friend deleted successfully");
+    res.status(200).send(`Friend with the email  ${email} deleted.`);
   } else {
     res.status(404).send("Friend not found");
   }
